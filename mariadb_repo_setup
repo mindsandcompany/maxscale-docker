@@ -611,7 +611,7 @@ clean_package_cache(){
   msg info 'Cleaning package cache...'
   case $1 in
     yum)
-      yum clean all
+      microdnf clean all
       ;;
     dnf)
       dnf clean all
