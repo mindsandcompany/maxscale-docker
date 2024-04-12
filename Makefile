@@ -1,5 +1,5 @@
 IMAGE_NAME := mariadb/maxscale
-VERSION := 24.02.0
+VERSION := 24.02.1
 DEV_SUFFIX ?=
 
 ifneq ($(DEV_SUFFIX), )
