@@ -3,7 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       version:
+        description: 'MaxScale version'
         required: true
+        type: string
+      tags:
+        description: 'Tags separated by comma'
+        required: true
+        type: string
+        default: 'mariadb/maxscale:insert_version_here-ubi'
 
 jobs:
   release:
@@ -40,7 +47,7 @@ jobs:
             MXS_VERSION=${{ github.event.inputs.version }}
           platforms: linux/amd64,linux/arm64
           tags: |
-            mariadb/maxscale:${{ github.event.inputs.version }}-ubi
+            ${{ github.event.inputs.tags }}
           labels: |
             org.opencontainers.image.title=MariaDB MaxScale
             org.opencontainers.image.description=MariaDB MaxScale is a database proxy that extends the high availability, scalability, and security of MariaDB Server
@@ -55,3 +62,4 @@ jobs:
           MXS_VERSION: "${{ github.event.inputs.version }}"
           REDHAT_API_KEY: "${{ secrets.REDHAT_API_KEY }}"
           REDHAT_PROJECT_ID: "${{ secrets.REDHAT_PROJECT_ID }}"
+
