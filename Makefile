@@ -27,13 +27,14 @@ help:
 build-image:
 	docker build -f Dockerfile -t $(IMAGE_TAG) --build-arg MXS_VERSION=$(MXS_VERSION) .
 
+PREFLIGHT_IMAGE ?= ""
 .PHONY: preflight-image
 preflight-image: preflight ## Run preflight tests on the image.
-	$(PREFLIGHT) check container $(IMAGE_TAG) --docker-config $(DOCKER_CONFIG)
+	$(PREFLIGHT) check container $(PREFLIGHT_IMAGE) --docker-config $(DOCKER_CONFIG)
 
 .PHONY: preflight-image-submit
 preflight-image-submit: preflight ## Run preflight tests on the image and submit the results to Red Hat.
-	$(PREFLIGHT) check container $(IMAGE_TAG)\
+	$(PREFLIGHT) check container $(PREFLIGHT_IMAGE)\
 		--submit \
 		--pyxis-api-token=$(REDHAT_API_KEY) \
 		--certification-project-id=$(REDHAT_PROJECT_ID)\

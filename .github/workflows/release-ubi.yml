@@ -57,7 +57,12 @@ jobs:
             org.opencontainers.image.version=${{ github.event.inputs.version }}
 
       - name: Preflight image
-        run: make preflight-image-submit
+        run: |
+          IFS=',' read -r -a TAGS_ARRAY <<< "${{ github.event.inputs.tags }}"
+          for TAG in "${TAGS_ARRAY[@]}"; do
+            echo "Running preflight for \"$TAG\""
+            PREFLIGHT_IMAGE="$TAG" make preflight-image-submit 
+          done
         env:
           MXS_VERSION: "${{ github.event.inputs.version }}"
           REDHAT_API_KEY: "${{ secrets.REDHAT_API_KEY }}"
