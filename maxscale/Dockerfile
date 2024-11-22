@@ -43,6 +43,9 @@ RUN chmod +x /usr/bin/maxscale-start \
     /usr/bin/maxscale-stop \
     /usr/bin/maxscale-restart
 
+# Use a recent NodeJS-version. Fixes some vulnerability warnings.
+RUN dnf -y module switch-to nodejs:20
+
 # Expose MariaDB Port
 EXPOSE 3306
 
