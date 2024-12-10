@@ -7,41 +7,19 @@ ENV MXS_VERSION=24.02.3
 RUN curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | \
     bash -s -- --mariadb-maxscale-version=${MXS_VERSION} --apply
 
-# Update System
-RUN dnf -y install epel-release && \
-    dnf -y upgrade
-
-# Install Some Basic Dependencies & MaxScale
-RUN dnf clean expire-cache && \
-    dnf -y install bind-utils \
-    findutils \
-    less \
-    maxscale \
-    monit \
-    nano \
-    ncurses \
-    net-tools \
-    openssl \
-    procps-ng \
-    rsyslog \
-    tini \
-    vim \
-    wget
+# Update system, install tools and MaxScale. Also, use a recent NodeJS-version to
+# avoid some vulnerability warnings.
+RUN dnf -y install epel-release && dnf -y upgrade && \
+    dnf clean expire-cache && dnf -y install maxscale findutils monit rsyslog tini && \
+    dnf -y module switch-to nodejs:20
 
 # Copy Files To Image
 COPY config/maxscale.cnf /etc/
-
 COPY config/monit.d/ /etc/monit.d/
-
-COPY scripts/maxscale-start \
-    scripts/maxscale-stop \
-    scripts/maxscale-restart \
-    /usr/bin/
+COPY scripts/maxscale-start scripts/maxscale-stop scripts/maxscale-restart /usr/bin/
 
 # Chmod Some Files
-RUN chmod +x /usr/bin/maxscale-start \
-    /usr/bin/maxscale-stop \
-    /usr/bin/maxscale-restart
+RUN chmod +x /usr/bin/maxscale-start /usr/bin/maxscale-stop /usr/bin/maxscale-restart
 
 # Expose MariaDB Port
 EXPOSE 3306
