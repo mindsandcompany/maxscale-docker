@@ -57,7 +57,13 @@ for more information about the REST API.
 Custom configuration can be given in an additional configuration file (e.g.
 `my-maxscale.cnf`). The file needs to be mounted into `/etc/maxscale.cnf.d/`:
 ```
-docker run -d --rm --name mxs -v $PWD/my-maxscale.cnf:/etc/maxscale.cnf.d/my-maxscale.cnf mariadb/maxscale:latest
+docker run -d --rm -p 8989:8989 --name mxs -v $PWD/my-maxscale.cnf:/etc/maxscale.cnf.d/my-maxscale.cnf mariadb/maxscale:latest
+```
+
+If the `[maxscale]`-section of the configuration file needs to be altered, the
+new file should override the default configuration file.
+```
+docker run -d --rm -p 8989:8989 --name mxs -v $PWD/my-maxscale.cnf:/etc/maxscale.cnf mariadb/maxscale:latest
 ```
 
 ### Commandline Access
