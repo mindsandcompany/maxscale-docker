@@ -49,12 +49,16 @@ jobs:
           tags: |
             ${{ github.event.inputs.tags }}
           labels: |
-            org.opencontainers.image.title=MariaDB MaxScale
-            org.opencontainers.image.description=MariaDB MaxScale is a database proxy that extends the high availability, scalability, and security of MariaDB Server
-            org.opencontainers.image.source=${{ github.event.repository.html_url }}
-            org.opencontainers.image.url=${{ github.event.repository.html_url }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ github.event.inputs.version }}
+            name=MariaDB MaxScale
+            maintainer="docker-maintainers@mariadb.com"
+            vendor="MariaDB, plc"
+            version=${{ github.event.inputs.version }}
+            release=${{ github.event.inputs.version }}
+            revision=${{ github.sha }}
+            summary="MariaDB MaxScale database proxy"
+            description=MariaDB MaxScale is a database proxy that extends the high availability, scalability, and security of MariaDB Server
+            source=${{ github.event.repository.html_url }}
+            url=${{ github.event.repository.html_url }}
 
       - name: Preflight image
         run: |
