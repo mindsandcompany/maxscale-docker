@@ -1,0 +1,83 @@
+MariaDB MaxScale Enterprise License Terms
+
+These MariaDB MaxScale Enterprise License Terms (“Terms”) apply to Customer’s use of the MariaDB
+MaxScale Enterprise software product (“MaxScale”) and its associated Documentation. “Documentation”
+means written technical information pertaining to MaxScale and made available by MariaDB USA, Inc. or its
+affiliate (“MariaDB”). By using MaxScale, Customer agrees to these Terms. These Terms are in addition to, and
+supplement, the terms of the subscription agreement separately entered into between Customer and MariaDB
+(the “Subscription Agreement”). Except as set forth herein, capitalized terms will have the meanings set forth
+in the Subscription Agreement. MaxScale is “Software” as separately defined in the Subscription Agreement.
+
+1. License Grant. Subject to Customer’s payment of the applicable fees for Subscription Services as set forth in
+an Order Form, MariaDB grants to Customer a personal, limited, non-exclusive, non-transferable, worldwide,
+and revocable license, without the right to sublicense, to use MaxScale for Customer’s internal business
+purposes and to use the Documentation in support of Customer’s use of MaxScale.
+
+2. License Restrictions. Customer’s use of MaxScale is limited solely to the use of MaxScale in combination
+with Software for which Customer has obtained Subscription Services directly from MariaDB or indirectly from a
+Partner.
+
+Customer has no right, and agrees not to:
+
+(a) transfer, assign, resell, distribute, redistribute, rent, lease, lend or sublicense its license rights under these
+Terms to any other person or entity or use MaxScale with any copies of MariaDB products or services or Server
+for which Customer has not obtained Subscription Services from MariaDB, and Customer acknowledges that
+any attempted transfer, assignment, resell, distribution, redistribution, rent, lease, lend, sublicense or use will be
+void,
+
+(b) use MaxScale in breach or excess of any limitations (e.g., quantities) prescribed by or agreed with MariaDB,
+
+(c) use or permit MaxScale to be used to perform services for third parties, whether on a service bureau or time-
+sharing basis, by way of managed services, commercial hosting services or similar environment, or otherwise,
+without the express written authorization of MariaDB,
+
+(d) remove, conceal, or alter any MaxScale identification, proprietary, copyright, intellectual property, or other
+notices in MaxScale and Documentation,
+
+(e) copy, decrypt, decompile, reverse engineer, disassemble, reduce to human-readable form, derive, or attempt
+to derive the source code of, algorithms, methods or techniques embodied in MaxScale, or any updates or any
+part thereof, except to the extent expressly required by applicable law,
+
+(f) modify, adapt, or create a derivative work of MaxScale, or any updates or any part thereof,
+
+(g) use MaxScale after the expiration of the applicable Term, or
+
+(h) assist or encourage any third party to do any of the foregoing.
+
+3. Proprietary Rights. MariaDB owns all worldwide right, title and interest in MaxScale and Documentation
+including all related copyright, trademarks, service marks, patents, trade secrets, know-how, moral rights, and all
+other proprietary rights, including registrations, applications, renewals and extensions of such rights existing
+anywhere in the world, whether registered or unregistered.
+
+MaxScale is a trade secret of MariaDB and constitutes MariaDB Confidential Information.
+
+Except for the rights explicitly granted, all rights, title, and interest in MaxScale and Documentation are reserved
+and retained by MariaDB.
+
+Customer does not acquire any intellectual property or other rights in MaxScale or Documentation as a result of
+using MaxScale or Documentation except as specified in these Terms.
+
+4. Proprietary Notices. Customer agrees to maintain and reproduce all copyright, proprietary, and other notices
+on all copies, in any form, of MaxScale in the same form and manner that such copyright and other proprietary
+notices are included on MaxScale.
+
+5. Usage certification and audit. MariaDB may require Customer, not more than once per year, that Customer
+certifies to MariaDB in writing as to Customer’s then current use of MaxScale, and MariaDB reserves the right to
+conduct reasonable audits, with notice, and in a manner that will not materially disrupt Customer’s business.
+
+6. Unauthorized Use. Use of MaxScale outside of the scope of these Terms constitutes a material breach, and
+Customer agrees to promptly pay upon notice any applicable additional fees.
+
+7. Benchmarking. Customer may perform benchmarks or comparative tests or evaluations (each, a
+“Benchmark”) of MaxScale. However, Customer must obtain MariaDB’s prior written approval to disclose to a
+third party the results of any Benchmark of MaxScale.
+
+8. Term and Termination. These Terms will remain effective during the entire Term applicable to MaxScale.
+Upon termination or expiration of such Term, Customer has no rights to continue using MaxScale or
+Documentation. All limitations of liability and disclaimers and restrictions of warranty will survive termination of
+these Terms.
+
+9. Miscellaneous. If any portion of these Terms is found to be void or unenforceable, the remaining provisions of
+these Terms will remain in full force and effect. Except as expressly provided herein, these Terms, together with
+the Subscription Agreement, constitute the entire agreement between the parties with respect to the license of
+MaxScale and Documentation.
