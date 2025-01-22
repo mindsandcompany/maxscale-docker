@@ -1,4 +1,4 @@
-# MariaDB MaxScale Container image
+# MariaDB MaxScale Container image for GenOS
 Maxscale 컨테이너 이미지 빌드 및 실행 
 ## Prerequisites
 - Docker
