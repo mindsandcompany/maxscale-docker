@@ -1,57 +1,22 @@
-![logo](https://raw.githubusercontent.com/mariadb-corporation/mariadb-community-columnstore-docker/master/MDB-HLogo_RGB.jpg)
+# MariaDB MaxScale Container image
+Maxscale 컨테이너 이미지 빌드 및 실행 
+## Prerequisites
+- Docker
+- 외부망 인터넷이 가능한 환경에서 빌드
+- 버전은 24.02.4으로 고정
 
-# MariaDB MaxScale Docker image
-
-This Docker image runs MariaDB MaxScale.
-
--	[Travis CI:  
-	![build status badge](https://img.shields.io/travis/mariadb-corporation/maxscale-docker/master.svg)](https://travis-ci.org/mariadb-corporation/maxscale-docker/branches)
-
-
-## Building
-
-Build the image:
+## Build & Push
+이미지 버전이나 이름 변경은 Makefile에서 수정
 ```
+# Build
 make build-image
+
+# Push
+make push-image
 ```
 
-## Running
-
-Pull the latest MaxScale image from docker hub:
+## Save
+maxscale.tar 파일 생성
 ```
-docker pull mariadb/maxscale:latest
+make save-image
 ```
-
-Run the MaxScale container as "mxs":
-```
-docker run -d --name mxs mariadb/maxscale:latest
-```
-
-## Configuration
-
-The [default configuration](maxscale/maxscale.cnf) for the container is minimal
-and only enables the REST API.
-
-The REST API by default listens on port 8989. The default user is "admin" with
-password "mariadb". Accessing it from the docker host requires a port mapping
-specified on container startup. The example below shows general information via
-curl.
-```
-docker run -d -p 8989:8989 --name mxs mariadb/maxscale:latest
-curl -u admin:mariadb http://localhost:8989/v1/maxscale
-```
-
-See [MaxScale documentation](https://mariadb.com/kb/en/11125/)
-for more information about the REST API.
-
-### Configure via configuration file
-
-Custom configuration can be given in an additional configuration file (e.g.
-`my-maxscale.cnf`). The file needs to be mounted into `/etc/maxscale.cnf.d/`:
-```
-docker run -d --name mxs -v $PWD/my-maxscale.cnf:/etc/maxscale.cnf.d/my-maxscale.cnf mariadb/maxscale:latest
-```
-
-### Commandline Access
-
-`docker exec -it mxs bash`
