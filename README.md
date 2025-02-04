@@ -15,7 +15,7 @@ make push
 ```
 
 ## Save
-maxscale_24.02.4.tar 파일 생성
+mariadb-maxscale_24.02.4.tar 파일 생성
 ```
 make save
 ```
