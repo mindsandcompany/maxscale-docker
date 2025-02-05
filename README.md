@@ -6,6 +6,8 @@ Maxscale 컨테이너 이미지 빌드 및 실행
 - 버전은 24.02.4으로 고정
 
 ## Build & Push
+- 기본적으로 non-root 이미지를 빌드하며, 기본 계정은 `UID`, `GID`, `UNAME`, `GNAME` 옵션으로 변경가능 
+- root 이미지는 `SECURITY=false` 옵션 사용
 ```
 # Build
 make build

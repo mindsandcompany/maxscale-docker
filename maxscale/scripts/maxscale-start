@@ -5,6 +5,6 @@ echo 'Starting...'
 rm -f /var/run/maxscale/maxscale.pid
 rm -f /var/cache/maxscale/maxscale.lock
 rm -f /var/lib/maxscale/maxscale.lock
-maxscale -U maxscale &
+maxscale -U maxscale -l stdout &
 echo "MaxScale PID = $!"
 exit 0

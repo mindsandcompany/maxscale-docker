@@ -13,6 +13,4 @@ trap exitMaxScale SIGTERM
 
 exec "$@" &
 
-tail -n+1 -F /var/log/maxscale/maxscale.log &
-
-wait
+tail -f /dev/null

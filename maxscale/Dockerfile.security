@@ -1,0 +1,110 @@
+# vim:set ft=dockerfile:
+    FROM rockylinux:8
+
+    ENV MXS_VERSION=24.02.4
+    
+
+    # Add MariaDB Enterprise Repo
+    RUN curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | \
+        bash -s -- --mariadb-maxscale-version=${MXS_VERSION} --apply
+    
+    # Update System
+    RUN dnf -y install epel-release && \
+        dnf -y upgrade
+    
+    # Install Some Basic Dependencies & MaxScale
+    RUN dnf clean expire-cache && \
+        dnf -y install bind-utils \
+        findutils \
+        less \
+        maxscale \
+        monit \
+        nano \
+        ncurses \
+        net-tools \
+        openssl \
+        procps-ng \
+        rsyslog \
+        tini \
+        vim \
+        wget \
+        sudo
+
+    ARG UID=1000
+    ARG GID=1000
+    ARG UNAME=mnc_admin
+    ARG GNAME=mnc_admin
+
+
+    RUN groupadd -g ${GID} ${GNAME} || groupadd -f ${GNAME}
+    RUN id -u ${UNAME} &>/dev/null || useradd -u ${UID} -g ${GID} ${UNAME}
+
+    RUN usermod -aG wheel $UNAME && \
+    echo "$UNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers 
+
+    USER $UNAME
+
+    WORKDIR /app
+
+    # Copy Files To Image
+    COPY --chown=$UID:$GID config/maxscale.cnf ./etc/
+    
+    COPY --chown=$UID:$GID config/monit.d/ ./etc/monit.d/
+    
+    COPY --chown=$UID:$GID scripts/maxscale-start \
+        scripts/maxscale-stop \
+        scripts/maxscale-restart \
+        /usr/bin/
+    
+    # Chmod Some Files
+    RUN chmod +x /usr/bin/maxscale-start \
+        /usr/bin/maxscale-stop \
+        /usr/bin/maxscale-restart
+
+    RUN sudo sed -i 's/maxscale -U maxscale -l stdout \&/maxscale -R \/app -l stdout \&/' /usr/bin/maxscale-start
+    
+    # Expose MariaDB Port
+    EXPOSE 3306
+    
+    # Expose REST API port
+    EXPOSE 8989
+    
+    # Create Persistent Volume
+    VOLUME ["./var/lib/maxscale"]
+    
+    # Copy Entrypoint To Image
+    COPY --chown=$UID:$GID scripts/docker-entrypoint.sh /usr/bin/
+    # RUN sed -i '/tail -n+1 -F \/var\/log\/maxscale\/maxscale.log &/d' /usr/bin/docker-entrypoint.sh
+    
+    # Make Entrypoint Executable & Create Legacy Symlink
+    RUN chmod +x /usr/bin/docker-entrypoint.sh && \
+        ln -s /usr/bin/docker-entrypoint.sh ./docker-entrypoint.sh
+    
+    # Clean System & Reduce Size
+    RUN sudo dnf clean all && \
+        sudo rm -rf /var/cache/dnf && \
+        # sudo sed -i 's|SysSock.Use="off"|SysSock.Use="on"|' /etc/rsyslog.conf && \
+        # sudo sed -i 's|^.*module(load="imjournal"|#module(load="imjournal"|g' /etc/rsyslog.conf && \
+        # sudo sed -i 's|^.*StateFile="imjournal.state")|#  StateFile="imjournal.state"\)|g' /etc/rsyslog.conf && \
+        sudo find /var/log -type f -exec cp /dev/null {} \; && \
+        # cat /dev/null > ~/.bash_history && \
+        history -c
+
+    RUN sudo chown $UID:$GID /usr/bin/maxscale /etc/monitrc /usr/bin/tini /usr/bin/monit
+    RUN mkdir -p /app/var/cache/maxscale \
+        /app/lib64/maxscale \
+        /app/etc/maxscale.modules.d \
+        /app/bin \
+        /app/var/log/maxscale \
+        /app/var/lib/maxscale \
+        /app/var/run/maxscale \
+        /app/lib64/maxscale/plugin 
+    RUN find /usr/lib64/maxscale -name "*.so" -exec sh -c 'target=$(echo "{}" | sed "s|/usr|/app|"); ln -sf "{}" "$target"' \;
+
+    
+    USER $UNAME
+    # Start Up
+    ENTRYPOINT ["/usr/bin/tini","--","docker-entrypoint.sh"]
+    
+    CMD ["maxscale-start", "&&", "monit", "-I"]
+    
