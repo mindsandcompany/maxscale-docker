@@ -37,9 +37,9 @@
 
 
     # Add group if not exists
-    RUN groupadd -g ${GID} ${GNAME} || groupadd -f ${GNAME}
+    RUN getent group $GNAME || groupadd -g ${GID} ${GNAME}
     # Add user if not exists
-    RUN id -u ${UNAME} &>/dev/null || useradd -u ${UID} -g ${GID} ${UNAME}
+    RUN getent passwd $UNAME || useradd -m -u ${UID} -g ${GID} -s /bin/bash ${UNAME}
 
     WORKDIR /app
 
