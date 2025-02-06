@@ -27,29 +27,26 @@
         rsyslog \
         tini \
         vim \
-        wget \
-        sudo
-
+        wget
+        
+    # Create non-root user. Must same as physical node's user
     ARG UID=1000
     ARG GID=1000
     ARG UNAME=mnc_admin
     ARG GNAME=mnc_admin
 
 
+    # Add group if not exists
     RUN groupadd -g ${GID} ${GNAME} || groupadd -f ${GNAME}
+    # Add user if not exists
     RUN id -u ${UNAME} &>/dev/null || useradd -u ${UID} -g ${GID} ${UNAME}
-
-    RUN usermod -aG wheel $UNAME && \
-    echo "$UNAME ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers 
-
-    USER $UNAME
 
     WORKDIR /app
 
     # Copy Files To Image
-    COPY --chown=$UID:$GID config/maxscale.cnf ./etc/
+    COPY config/maxscale.cnf ./etc/
     
-    COPY --chown=$UID:$GID config/monit.d/ ./etc/monit.d/
+    COPY config/monit.d/ ./etc/monit.d/
     
     COPY --chown=$UID:$GID scripts/maxscale-start \
         scripts/maxscale-stop \
@@ -61,7 +58,8 @@
         /usr/bin/maxscale-stop \
         /usr/bin/maxscale-restart
 
-    RUN sudo sed -i 's/maxscale -U maxscale -l stdout \&/maxscale -R \/app -l stdout \&/' /usr/bin/maxscale-start
+    # Change maxscale command for non-root user
+    RUN sed -i 's/maxscale -U maxscale -l stdout \&/maxscale -R \/app -l stdout \&/' /usr/bin/maxscale-start
     
     # Expose MariaDB Port
     EXPOSE 3306
@@ -74,23 +72,22 @@
     
     # Copy Entrypoint To Image
     COPY --chown=$UID:$GID scripts/docker-entrypoint.sh /usr/bin/
-    # RUN sed -i '/tail -n+1 -F \/var\/log\/maxscale\/maxscale.log &/d' /usr/bin/docker-entrypoint.sh
     
     # Make Entrypoint Executable & Create Legacy Symlink
     RUN chmod +x /usr/bin/docker-entrypoint.sh && \
         ln -s /usr/bin/docker-entrypoint.sh ./docker-entrypoint.sh
     
     # Clean System & Reduce Size
-    RUN sudo dnf clean all && \
-        sudo rm -rf /var/cache/dnf && \
-        # sudo sed -i 's|SysSock.Use="off"|SysSock.Use="on"|' /etc/rsyslog.conf && \
-        # sudo sed -i 's|^.*module(load="imjournal"|#module(load="imjournal"|g' /etc/rsyslog.conf && \
-        # sudo sed -i 's|^.*StateFile="imjournal.state")|#  StateFile="imjournal.state"\)|g' /etc/rsyslog.conf && \
-        sudo find /var/log -type f -exec cp /dev/null {} \; && \
-        # cat /dev/null > ~/.bash_history && \
+    RUN dnf clean all && \
+        rm -rf /var/cache/dnf && \
+        sed -i 's|SysSock.Use="off"|SysSock.Use="on"|' /etc/rsyslog.conf && \
+        sed -i 's|^.*module(load="imjournal"|#module(load="imjournal"|g' /etc/rsyslog.conf && \
+        sed -i 's|^.*StateFile="imjournal.state")|#  StateFile="imjournal.state"\)|g' /etc/rsyslog.conf && \
+        find /var/log -type f -exec cp /dev/null {} \; && \
+        cat /dev/null > ~/.bash_history && \
         history -c
 
-    RUN sudo chown $UID:$GID /usr/bin/maxscale /etc/monitrc /usr/bin/tini /usr/bin/monit
+    # Create necessary directories
     RUN mkdir -p /app/var/cache/maxscale \
         /app/lib64/maxscale \
         /app/etc/maxscale.modules.d \
@@ -99,10 +96,15 @@
         /app/var/lib/maxscale \
         /app/var/run/maxscale \
         /app/lib64/maxscale/plugin 
-    RUN find /usr/lib64/maxscale -name "*.so" -exec sh -c 'target=$(echo "{}" | sed "s|/usr|/app|"); ln -sf "{}" "$target"' \;
-
     
-    USER $UNAME
+    # Create maxscale library's symbolic links under the base directory of maxscale for non-root user
+    RUN find /usr/lib64/maxscale -name "*.so" -exec sh -c 'target=$(echo "{}" | sed "s|/usr|/app|"); ln -sf "{}" "$target"' \;
+        
+    # Change permissions of related files and directory
+    RUN chown $UID:$GID /usr/bin/maxscale /etc/monitrc /usr/bin/tini /usr/bin/monit
+    RUN chown -R $UNAME:$GNAME /app
+    
+    USER $UNAME:$GNAME
     # Start Up
     ENTRYPOINT ["/usr/bin/tini","--","docker-entrypoint.sh"]
     
